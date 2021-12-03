@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "XuvYnd7V1KhdfePVAxUXLiN9MZsGfw9XYas5xp/AaBAoKAehYQi3/erAPM5jcx/keDBGo0sPtT6/G9clGFoZ+A==",
+  "dgSpecHash": "wuqTyLXgAHJn/Z3eHIfdlT8se8rEGyC6OFNuPLJA1jh68hxNa26IxrnStCaEjQuxcmaLuBRw6xSPMtqtUzjNUQ==",
   "success": true,
-  "projectFilePath": "C:\\speeltuin\\Speeltuin\\Speeltuin\\Speeltuin.csproj",
+  "projectFilePath": "C:\\speeltuin\\Speeltuin\\Speeltuin\\AdventOfCode.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

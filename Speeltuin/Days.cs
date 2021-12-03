@@ -6,9 +6,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Speeltuin
+namespace AdventOfCode
 {
-    class Kata
+    class Days
     {
         public static void AdventOfCode11()
         {

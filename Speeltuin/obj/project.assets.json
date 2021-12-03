@@ -14,9 +14,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\speeltuin\\Speeltuin\\Speeltuin\\Speeltuin.csproj",
-      "projectName": "Speeltuin",
-      "projectPath": "C:\\speeltuin\\Speeltuin\\Speeltuin\\Speeltuin.csproj",
+      "projectUniqueName": "C:\\speeltuin\\Speeltuin\\Speeltuin\\AdventOfCode.csproj",
+      "projectName": "AdventOfCode",
+      "projectPath": "C:\\speeltuin\\Speeltuin\\Speeltuin\\AdventOfCode.csproj",
       "packagesPath": "C:\\Users\\MFRCF90\\.nuget\\packages\\",
       "outputPath": "C:\\speeltuin\\Speeltuin\\Speeltuin\\obj\\",
       "projectStyle": "PackageReference",

@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\speeltuin\\Speeltuin\\Speeltuin\\AdventOfCode.csproj",
+      "projectUniqueName": "C:\\sandbox\\AdventOfCode\\AdventOfCode\\AdventOfCode.csproj",
       "projectName": "AdventOfCode",
-      "projectPath": "C:\\speeltuin\\Speeltuin\\Speeltuin\\AdventOfCode.csproj",
+      "projectPath": "C:\\sandbox\\AdventOfCode\\AdventOfCode\\AdventOfCode.csproj",
       "packagesPath": "C:\\Users\\MFRCF90\\.nuget\\packages\\",
-      "outputPath": "C:\\speeltuin\\Speeltuin\\Speeltuin\\obj\\",
+      "outputPath": "C:\\sandbox\\AdventOfCode\\AdventOfCode\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

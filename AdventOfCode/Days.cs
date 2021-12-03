@@ -9,82 +9,83 @@ using System.Threading.Tasks;
 namespace AdventOfCode
 {
     class Days
+
     {
+        private const string Path = @"C:\sandbox\AdventOfCode\AdventOfCode\bin\";
+
         public static void AdventOfCode11()
         {
-            string fileName = @"C:\speeltuin\Speeltuin\Speeltuin\bin\input1";
+            string fileName = Path + "input1";
             int increased = 0;
-            IEnumerable<string> lines = File.ReadLines(fileName);
-            for (int i =1;i <lines.Count(); i++)
+            var lines = File.ReadLines(fileName).ToArray();
+            for (int i =1;i < lines.Length; i++)
             {
-                if (Convert.ToInt32(lines.ElementAt(i)) > Convert.ToInt32(lines.ElementAt(i-1))) increased++;
+                if (Convert.ToInt32(lines[i]) > Convert.ToInt32(lines[i-1])) increased++;
             }
             Console.WriteLine(increased);
         }
         public static void AdventOfCode12()
         {
-            string fileName = @"C:\speeltuin\Speeltuin\Speeltuin\bin\input1";
+            string fileName = Path + "input1";
             int increased = 0;
-            IEnumerable<string> lines = File.ReadLines(fileName);
-            for (int i = 0; i < lines.Count()-3; i++)
+            var lines = File.ReadLines(fileName).ToArray();
+            for (int i = 0; i < lines.Length - 3; i++)
             {
-                if (Convert.ToInt32(lines.ElementAt(i)) + Convert.ToInt32(lines.ElementAt(i+1)) + Convert.ToInt32(lines.ElementAt(i + 2))
-                   < Convert.ToInt32(lines.ElementAt(i + 1)) + Convert.ToInt32(lines.ElementAt(i + 2)) + Convert.ToInt32(lines.ElementAt(i + 3))) increased++;
+                if (Convert.ToInt32(lines[i]) + Convert.ToInt32(lines[i+1]) + Convert.ToInt32(lines[i+2])
+                   < Convert.ToInt32(lines[i+1]) + Convert.ToInt32(lines[i+2]) + Convert.ToInt32(lines[i+3])) increased++;
             }
             Console.WriteLine(increased);
         }
         public static void AdventOfCode21()
         {
-            string fileName = @"C:\speeltuin\Speeltuin\Speeltuin\bin\input2";
+            string fileName = Path + "input2";
             int horizontalPos = 0;
             int depth = 0;
 
-            IEnumerable<string> lines = File.ReadLines(fileName);
-            for (int i = 0; i < lines.Count(); i++)
+            var lines = File.ReadLines(fileName).ToArray();
+            for (int i = 0; i < lines.Length; i++)
             {
-                var test = Convert.ToInt32(Regex.Match(lines.ElementAt(i), @"\d+").Value);
-                if (lines.ElementAt(i).Contains("forward")) horizontalPos += Convert.ToInt32(Regex.Match(lines.ElementAt(i), @"\d+").Value);
-                if (lines.ElementAt(i).Contains("down ")) depth += Convert.ToInt32(Regex.Match(lines.ElementAt(i), @"\d+").Value);
-                if (lines.ElementAt(i).Contains("up")) depth -= Convert.ToInt32(Regex.Match(lines.ElementAt(i), @"\d+").Value);
+                if (lines[i].Contains("forward")) horizontalPos += Convert.ToInt32(Regex.Match(lines[i], @"\d+").Value);
+                if (lines[i].Contains("down ")) depth += Convert.ToInt32(Regex.Match(lines[i], @"\d+").Value);
+                if (lines[i].Contains("up")) depth -= Convert.ToInt32(Regex.Match(lines[i], @"\d+").Value);
 
             }
             Console.WriteLine(horizontalPos * depth);
         }
         public static void AdventOfCode22()
         {
-            string fileName = @"C:\speeltuin\Speeltuin\Speeltuin\bin\input2";
+            string fileName = Path + "input2";
             int horizontalPos = 0;
             int depth = 0;
             int aim = 0;
 
-            IEnumerable<string> lines = File.ReadLines(fileName);
-            for (int i = 0; i < lines.Count(); i++)
+            var lines = File.ReadLines(fileName).ToArray();
+            for (int i = 0; i < lines.Length; i++)
             {
-                var test = Convert.ToInt32(Regex.Match(lines.ElementAt(i), @"\d+").Value);
-                if (lines.ElementAt(i).Contains("forward")) 
+                if (lines[i].Contains("forward")) 
                 { 
-                    horizontalPos += Convert.ToInt32(Regex.Match(lines.ElementAt(i), @"\d+").Value);
-                    depth += aim * Convert.ToInt32(Regex.Match(lines.ElementAt(i), @"\d+").Value); 
+                    horizontalPos += Convert.ToInt32(Regex.Match(lines[i], @"\d+").Value);
+                    depth += aim * Convert.ToInt32(Regex.Match(lines[i], @"\d+").Value); 
                 }
-                if (lines.ElementAt(i).Contains("down ")) aim += Convert.ToInt32(Regex.Match(lines.ElementAt(i), @"\d+").Value);
-                if (lines.ElementAt(i).Contains("up")) aim -= Convert.ToInt32(Regex.Match(lines.ElementAt(i), @"\d+").Value);
+                if (lines[i].Contains("down ")) aim += Convert.ToInt32(Regex.Match(lines[i], @"\d+").Value);
+                if (lines[i].Contains("up")) aim -= Convert.ToInt32(Regex.Match(lines[i], @"\d+").Value);
 
             }
             Console.WriteLine(horizontalPos * depth);
         }
         public static void AdventOfCode31()
         {
-            string fileName = @"C:\speeltuin\Speeltuin\Speeltuin\bin\input3";
-            IEnumerable<string> lines = File.ReadLines(fileName);
+            string fileName = Path + "input3";
+            var lines = File.ReadLines(fileName).ToArray();
 
-            int length = lines.ElementAt(1).Length;
+            int length =lines[0].Length;
             string gamma = "";
             string epsilon = "";
 
             for (int i = 0; i < length; i++)
             {
-                List<int> zeroes = new List<int>();
-                List<int> ones = new List<int>();
+                List<int> zeroes = new();
+                List<int> ones = new();
 
                 foreach (var line in lines)
                 {
@@ -108,7 +109,7 @@ namespace AdventOfCode
         }
         public static void AdventOfCode32()
         {
-            string fileName = @"C:\speeltuin\Speeltuin\Speeltuin\bin\input3";
+            string fileName = Path + "input3";
             var oxArr = File.ReadLines(fileName).ToArray();
             var coArr = File.ReadLines(fileName).ToArray();
 

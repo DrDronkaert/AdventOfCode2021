@@ -1,0 +1,16 @@
+C:\speeltuin\Speeltuin\Speeltuin\bin\Debug\net5.0\Speeltuin.exe
+C:\speeltuin\Speeltuin\Speeltuin\bin\Debug\net5.0\Speeltuin.deps.json
+C:\speeltuin\Speeltuin\Speeltuin\bin\Debug\net5.0\Speeltuin.runtimeconfig.json
+C:\speeltuin\Speeltuin\Speeltuin\bin\Debug\net5.0\Speeltuin.runtimeconfig.dev.json
+C:\speeltuin\Speeltuin\Speeltuin\bin\Debug\net5.0\Speeltuin.dll
+C:\speeltuin\Speeltuin\Speeltuin\bin\Debug\net5.0\ref\Speeltuin.dll
+C:\speeltuin\Speeltuin\Speeltuin\bin\Debug\net5.0\Speeltuin.pdb
+C:\speeltuin\Speeltuin\Speeltuin\obj\Debug\net5.0\Speeltuin.csproj.AssemblyReference.cache
+C:\speeltuin\Speeltuin\Speeltuin\obj\Debug\net5.0\Speeltuin.GeneratedMSBuildEditorConfig.editorconfig
+C:\speeltuin\Speeltuin\Speeltuin\obj\Debug\net5.0\Speeltuin.AssemblyInfoInputs.cache
+C:\speeltuin\Speeltuin\Speeltuin\obj\Debug\net5.0\Speeltuin.AssemblyInfo.cs
+C:\speeltuin\Speeltuin\Speeltuin\obj\Debug\net5.0\Speeltuin.csproj.CoreCompileInputs.cache
+C:\speeltuin\Speeltuin\Speeltuin\obj\Debug\net5.0\Speeltuin.dll
+C:\speeltuin\Speeltuin\Speeltuin\obj\Debug\net5.0\ref\Speeltuin.dll
+C:\speeltuin\Speeltuin\Speeltuin\obj\Debug\net5.0\Speeltuin.pdb
+C:\speeltuin\Speeltuin\Speeltuin\obj\Debug\net5.0\Speeltuin.genruntimeconfig.cache

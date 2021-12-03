@@ -6,12 +6,13 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
+
 namespace AdventOfCode
 {
     class Days
 
     {
-        private const string Path = @"C:\sandbox\AdventOfCode\AdventOfCode\bin\";
+        private static readonly string Path = System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\input\\"));
 
         public static void AdventOfCode11()
         {

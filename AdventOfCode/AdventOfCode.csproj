@@ -5,4 +5,16 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="input\input1" />
+    <None Remove="input\input2" />
+    <None Remove="input\input3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="input\input1" />
+    <Resource Include="input\input2" />
+    <Resource Include="input\input3" />
+  </ItemGroup>
+
 </Project>

@@ -19,9 +19,9 @@ namespace AdventOfCode
             string fileName = Path + "input1";
             int increased = 0;
             var lines = File.ReadLines(fileName).ToArray();
-            for (int i =1;i < lines.Length; i++)
+            for (int i =0;i < lines.Length-1; i++)
             {
-                if (Convert.ToInt32(lines[i]) > Convert.ToInt32(lines[i-1])) increased++;
+                if (Convert.ToInt32(lines[i]) < Convert.ToInt32(lines[i+1])) increased++;
             }
             Console.WriteLine(increased);
         }
@@ -85,16 +85,9 @@ namespace AdventOfCode
 
             for (int i = 0; i < length; i++)
             {
-                List<int> zeroes = new();
-                List<int> ones = new();
-
-                foreach (var line in lines)
-                {
-                    if (line[i] == '0') zeroes.Add(0);
-                    if (line[i] == '1') ones.Add(1);
-
-                }
-                if (zeroes.Count > ones.Count)
+                var zeroes = lines.Where(x => x[i] == '0').ToArray();
+                var ones = lines.Where(x => x[i] == '1').ToArray();
+                if (zeroes.Length > ones.Length)
                 {
                     gamma += "0";
                     epsilon += "1";
@@ -111,20 +104,10 @@ namespace AdventOfCode
         public static void AdventOfCode32()
         {
             string fileName = Path + "input3";
-            var oxArr = File.ReadLines(fileName).ToArray();
-            var coArr = File.ReadLines(fileName).ToArray();
+            var data = File.ReadLines(fileName).ToArray();
 
-            string ox = "";
-            string co = "";
-
-            for (int i = 0; i < oxArr[0].Length; i++)
-            {
-             oxArr = returnMostCommonArr(oxArr, i,true);
-             coArr = returnMostCommonArr(coArr, i, false);
-             if (coArr.Length == 1) co = coArr[0];
-             if (oxArr.Length == 1) ox = oxArr[0];
-            }
-
+            string ox = FindOxygen(data);
+            string co = FindCo(data);
 
             int oxInt = Convert.ToInt32(ox, 2);
             int coInt = Convert.ToInt32(co, 2);
@@ -132,26 +115,47 @@ namespace AdventOfCode
 
         }
 
-        private static string[] returnMostCommonArr(string[] lines, int i, bool isItOxygen)
+        private static string FindOxygen(string[] data)
+        {
+            for (int i = 0; i < data[0].Length; i++)
+            {
+                data = returnMostCommonArr(data, i, true);
+                if (data.Length == 1) return data[0];
+            }
+            return data[0];
+        }
+
+        private static string FindCo(string[] data)
+        {
+            for (int i = 0; i < data[0].Length; i++)
+            {
+                data = returnMostCommonArr(data, i, false);
+                if (data.Length == 1) return data[0];
+            }
+            return data[0];
+        }
+
+
+        private static string[] returnMostCommonArr(string[] lines, int columnIndex, bool isItOxygen)
         {
             if (lines.Length == 1) return lines ;
-            var zeroes = lines.Where(x => x[i] == '0').ToArray();
-            var ones = lines.Where(x => x[i] == '1').ToArray();
+            var zeroes = lines.Where(x => x[columnIndex] == '0').ToArray();
+            var ones = lines.Where(x => x[columnIndex] == '1').ToArray();
             if (isItOxygen)
             {
-                if (zeroes.Length > ones.Length) lines = zeroes;
-                if (ones.Length > zeroes.Length || ones.Length == zeroes.Length) lines = ones;
+                if (zeroes.Length > ones.Length) return zeroes;
+                if (ones.Length > zeroes.Length || ones.Length == zeroes.Length) return ones;
             }
 
             else
             {
-                if (zeroes.Length > ones.Length) lines = ones;
-                if (ones.Length > zeroes.Length || ones.Length == zeroes.Length) lines = zeroes;
+                if (zeroes.Length > ones.Length) return ones;
+                if (ones.Length > zeroes.Length || ones.Length == zeroes.Length) return zeroes;
             }
             
 
             return lines;
-
         }
+
     }
 }

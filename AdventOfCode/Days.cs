@@ -113,52 +113,43 @@ namespace AdventOfCode
             var oxArr = File.ReadLines(fileName).ToArray();
             var coArr = File.ReadLines(fileName).ToArray();
 
-            int length = oxArr[1].Length;
-
             string ox = "";
             string co = "";
 
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < oxArr[0].Length; i++)
             {
-                List<string> zeroes = new();
-                List<string> ones = new();
-
-                for (int x= 0; x < oxArr.Length; x++)
-                {
-                    if (oxArr[x][i] == '0') zeroes.Add(oxArr[x]);
-                    if (oxArr[x][i] == '1') ones.Add(oxArr[x]);
-                }
-
-                if (zeroes.Count > ones.Count) oxArr = zeroes.ToArray();
-                if (ones.Count > zeroes.Count) oxArr = ones.ToArray();
-                if (ones.Count == zeroes.Count) oxArr = ones.ToArray();
-                if (oxArr.Length == 1) ox = oxArr[0];
-
-
+             oxArr = returnMostCommonArr(oxArr, i,true);
+             coArr = returnMostCommonArr(coArr, i, false);
+             if (coArr.Length == 1) co = coArr[0];
+             if (oxArr.Length == 1) ox = oxArr[0];
             }
 
-            for (int i = 0; i < length; i++)
-            {
-                List<string> zeroes = new();
-                List<string> ones = new();
-
-                for (int x = 0; x < coArr.Length; x++)
-                {
-                    if (coArr[x][i] == '0') zeroes.Add(coArr[x]);
-                    if (coArr[x][i] == '1') ones.Add(coArr[x]);
-                }
-
-                if (zeroes.Count > ones.Count) coArr = ones.ToArray();
-                if (ones.Count > zeroes.Count) coArr = zeroes.ToArray();
-                if (ones.Count == zeroes.Count && zeroes.Count!=0) coArr = zeroes.ToArray();
-                if (coArr.Length == 1) co = coArr[0];
-
-
-            }
 
             int oxInt = Convert.ToInt32(ox, 2);
             int coInt = Convert.ToInt32(co, 2);
             Console.WriteLine(oxInt * coInt);
+
+        }
+
+        private static string[] returnMostCommonArr(string[] lines, int i, bool isItOxygen)
+        {
+            if (lines.Length == 1) return lines ;
+            var zeroes = lines.Where(x => x[i] == '0').ToArray();
+            var ones = lines.Where(x => x[i] == '1').ToArray();
+            if (isItOxygen)
+            {
+                if (zeroes.Length > ones.Length) lines = zeroes;
+                if (ones.Length > zeroes.Length || ones.Length == zeroes.Length) lines = ones;
+            }
+
+            else
+            {
+                if (zeroes.Length > ones.Length) lines = ones;
+                if (ones.Length > zeroes.Length || ones.Length == zeroes.Length) lines = zeroes;
+            }
+            
+
+            return lines;
 
         }
     }

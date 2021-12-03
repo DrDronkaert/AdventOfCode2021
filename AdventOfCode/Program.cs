@@ -7,17 +7,17 @@ namespace AdventOfCode
         static void Main(string[] args)
         {
             Console.WriteLine("11:");
-            Days.AdventOfCode11();
+            Day1.AdventOfCode11();
             Console.WriteLine("12:");
-            Days.AdventOfCode12();
+            Day1.AdventOfCode12();
             Console.WriteLine("21:");
-            Days.AdventOfCode21();
+            Day2.AdventOfCode21();
             Console.WriteLine("22:");
-            Days.AdventOfCode22();
+            Day2.AdventOfCode22();
             Console.WriteLine("31:");
-            Days.AdventOfCode31();
+            Day3.AdventOfCode31();
             Console.WriteLine("32:");
-            Days.AdventOfCode32();
+            Day3.AdventOfCode32();
         }
     }
 }

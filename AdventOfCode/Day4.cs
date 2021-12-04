@@ -65,7 +65,6 @@ namespace AdventOfCode
         internal void StartFindingNumbersInBoards()
         {
 
-           while(Boards.Any(x => x.HasWon == false)) {
                 for (int i = 0; i < NumbersToDrawFrom.Length; i++)
                 {
                     foreach (Board b in Boards)
@@ -79,7 +78,6 @@ namespace AdventOfCode
                             if (r.NumbersInRow.Contains(NumbersToDrawFrom[i])) r.NumbersInRow[Array.IndexOf(r.NumbersInRow, NumbersToDrawFrom[i])] = -1;
                         }
                         if (b.Columns.Any(x => x.NumbersInColumn.SequenceEqual(new[] { -1, -1, -1, -1, -1 }))) {
-                            b.HasWon = true;
                             int sumUnmarked = 0;
                             foreach (Column c in b.Columns)
                             {
@@ -88,24 +86,26 @@ namespace AdventOfCode
                                     if (number1 != -1) sumUnmarked += number1;
                                 }
                             }
-                         
+
                             Console.WriteLine(sumUnmarked * NumbersToDrawFrom[i]);
+                            b.HasWon = true;
+                            return;
 
 
                         }
                         if (b.Rows.Any(x => x.NumbersInRow.SequenceEqual(new[] { -1, -1, -1, -1, -1 })))
                         {
-                            b.HasWon = true;
                             int sumUnmarked = 0;
-                            foreach (Column c in b.Columns) {
-                            foreach (var number1 in c.NumbersInColumn)
+                            foreach (Column c in b.Columns)
+                            {
+                                foreach (var number1 in c.NumbersInColumn)
                                 {
                                     if (number1 != -1) sumUnmarked += number1;
                                 }
                             }
-                         
-                            Console.WriteLine(sumUnmarked * NumbersToDrawFrom[i]);
 
+                            Console.WriteLine(sumUnmarked * NumbersToDrawFrom[i]);
+                            b.HasWon = true;
                             return;
 
                         }
@@ -113,9 +113,7 @@ namespace AdventOfCode
                     }
 
         }
-           }
-            var test = Boards.Where(x => x.HasWon == true);
-            Console.WriteLine(Boards.Any(x => x.HasWon == true));
+           
 
         }
 
@@ -123,7 +121,6 @@ namespace AdventOfCode
         {
             List<int> IdsOfCompletedBoards = new();
 
-            while (Boards.Any(x => x.HasWon == false)) {
                 for (int i = 0; i < NumbersToDrawFrom.Length; i++)
                 {
                     foreach (Board b in Boards)
@@ -138,10 +135,9 @@ namespace AdventOfCode
                         }
                         if (b.Columns.Any(x => x.NumbersInColumn.SequenceEqual(new[] { -1, -1, -1, -1, -1 })))
                         {
-                            b.HasWon = true;
                             IdsOfCompletedBoards.Add(b.Id);
                             IdsOfCompletedBoards = IdsOfCompletedBoards.Distinct<int>().ToList();
-                            if (IdsOfCompletedBoards.Count == 100)
+                            if (IdsOfCompletedBoards.Count == Boards.Length)
                             {
                                 int sumUnmarked = 0;
                                 foreach (Board b2 in Boards.Where(b => b.Id == IdsOfCompletedBoards.ElementAt(99)))
@@ -164,10 +160,9 @@ namespace AdventOfCode
                         }
                         if (b.Rows.Any(x => x.NumbersInRow.SequenceEqual(new[] { -1, -1, -1, -1, -1 })))
                         {
-                            b.HasWon = true;
                             IdsOfCompletedBoards.Add(b.Id);
                             IdsOfCompletedBoards = IdsOfCompletedBoards.Distinct<int>().ToList();
-                            if (IdsOfCompletedBoards.Count == 100)
+                            if (IdsOfCompletedBoards.Count == Boards.Length)
                             {
                                 int sumUnmarked = 0;
                                 foreach (Board b2 in Boards.Where(b => b.Id == IdsOfCompletedBoards.ElementAt(99)))
@@ -189,7 +184,7 @@ namespace AdventOfCode
                     }
 
             }
-            }
+          
             
 
         }

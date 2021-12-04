@@ -20,6 +20,8 @@ namespace AdventOfCode
             Day3.AdventOfCode32();
             Console.WriteLine("41:");
             Day4.AdventOfCode41();
+            Console.WriteLine("42:");
+            Day4.AdventOfCode42();
         }
     }
 }

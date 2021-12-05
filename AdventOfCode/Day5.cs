@@ -11,7 +11,16 @@ namespace AdventOfCode
         public static void AdventOfCode51()
         {
             var data = ReadFileLogic.CreateArrayFromInputFileName("input5");
-            LinesCalculator l = new(data);
+            LinesCalculator l = new(data, false);
+            l.PrintOccurenceOfHorizontalAndVerticalPoints();
+
+        }
+        public static void AdventOfCode52()
+        {
+            var data = ReadFileLogic.CreateArrayFromInputFileName("input5");
+            LinesCalculator l = new(data, true);
+            l.PrintOccurenceOfHorizontalAndVerticalAndDiagonalPoints();
+
         }
     }
 
@@ -26,11 +35,29 @@ namespace AdventOfCode
 
         public Vector[] IntersectingPoints { get; set; }
 
-        public LinesCalculator(string[] data)
+        public LinesCalculator(string[] data, bool diagonal)
         {
             List<LineSegment> Lines = new();
 
+            if (diagonal)
+            {
+                for (int i = 0; i < data.Length; i++)
+                {
+                    var points = data[i].Split(new String[] { " -> " }, StringSplitOptions.RemoveEmptyEntries);
+                    var firstXCo = Convert.ToDouble(points[0].Split(',')[0]);
+                    var firstYCo = Convert.ToDouble(points[0].Split(',')[1]);
 
+                    var secondXCo = Convert.ToDouble(points[1].Split(',')[0]);
+                    var secondYCo = Convert.ToDouble(points[1].Split(',')[1]);
+
+                    Lines.Add(new LineSegment { First = new Vector(firstXCo, firstYCo), Second = new Vector(secondXCo, secondYCo) });
+
+                }
+
+
+                Alllines = Lines.ToArray();
+                return;
+            }
             for (int i = 0; i < data.Length; i++)
             {
                 var points = data[i].Split(new String[] { " -> " }, StringSplitOptions.RemoveEmptyEntries);
@@ -46,12 +73,99 @@ namespace AdventOfCode
 
 
             Alllines = Lines.ToArray();
-            this.FillAllPointsCoveredByAllLines();
-            this.FillOccurenceOfAllPoints();
+          
         }
 
-        private void FillOccurenceOfAllPoints()
+        private void FillAllPointsCoveredByHorizontalAndVerticalAndDiagonalLines()
         {
+            List<Vector> points = new List<Vector>();
+            for (int i = 0; i < Alllines.Length; i++)
+            {
+                points = points.Concat(CalculatePointsCoveredByHorizontalAndVerticalAndDiagonalLine(Alllines[i])).ToList();
+            }
+            this.AllPointsCoveredByAllLines = points.ToArray();
+        }
+
+        private IEnumerable<Vector> CalculatePointsCoveredByHorizontalAndVerticalAndDiagonalLine(LineSegment lineSegment)
+        {
+            List<Vector> points = new List<Vector>();
+            if (lineSegment.First.X > lineSegment.Second.X && lineSegment.First.Y < lineSegment.Second.Y)
+            {
+                for (int i = 0; i < lineSegment.First.X - lineSegment.Second.X; i++)
+                {
+                        points.Add(new Vector(lineSegment.Second.X ++, lineSegment.First.Y ++));
+
+                    
+                }
+            }
+
+            if (lineSegment.First.X > lineSegment.Second.X && lineSegment.First.Y > lineSegment.Second.Y)
+            {
+                for (int i = 0; i < lineSegment.First.X - lineSegment.Second.X; i++)
+                {
+                        points.Add(new Vector(lineSegment.Second.X ++, lineSegment.Second.Y ++));
+
+                    
+                }
+            }
+            if (lineSegment.First.X < lineSegment.Second.X && lineSegment.First.Y < lineSegment.Second.Y)
+            {
+                for (int i = 0; i < lineSegment.Second.X - lineSegment.First.X; i++)
+                {
+                        points.Add(new Vector(lineSegment.First.X ++, lineSegment.First.Y ++));
+
+                    
+                }
+            }
+            if (lineSegment.First.X < lineSegment.Second.X && lineSegment.First.Y > lineSegment.Second.Y)
+            {
+                for (int i = 0; i < lineSegment.Second.X - lineSegment.First.X; i++)
+                {
+                        points.Add(new Vector(lineSegment.Second.X ++, lineSegment.First.Y ++));
+
+                    
+                }
+            }
+            if (lineSegment.First.X == lineSegment.Second.X)
+            {
+                if (lineSegment.First.Y > lineSegment.Second.Y)
+                {
+                    for (int i = Convert.ToInt32(lineSegment.Second.Y); i <= lineSegment.First.Y; i++)
+                    {
+                        points.Add(new Vector(lineSegment.First.X, i));
+                    }
+                }
+                else
+                {
+                    for (int i = Convert.ToInt32(lineSegment.First.Y); i <= lineSegment.Second.Y; i++)
+                    {
+                        points.Add(new Vector(lineSegment.First.X, i));
+                    }
+                }
+            }
+            if (lineSegment.First.Y == lineSegment.Second.Y)
+            {
+                if (lineSegment.First.X > lineSegment.Second.X)
+                {
+                    for (int i = Convert.ToInt32(lineSegment.Second.X); i <= lineSegment.First.X; i++)
+                    {
+                        points.Add(new Vector(i, lineSegment.First.Y));
+                    }
+                }
+                else
+                {
+                    for (int i = Convert.ToInt32(lineSegment.First.X); i <= lineSegment.Second.X; i++)
+                    {
+                        points.Add(new Vector(i, lineSegment.Second.Y));
+                    }
+                }
+            }
+            return points.ToArray();
+        }
+
+        public void PrintOccurenceOfHorizontalAndVerticalPoints()
+        {
+            FillAllPointsCoveredByHorizontalAndVerticalLines();
             var distinctPoints = AllPointsCoveredByAllLines.Distinct().ToArray();
 
            foreach (Vector point in distinctPoints)
@@ -63,17 +177,17 @@ namespace AdventOfCode
             Console.WriteLine(distinctPoints.Where(x => x.Occurence >= 2).Count());
         }
 
-        private void FillAllPointsCoveredByAllLines()
+        private void FillAllPointsCoveredByHorizontalAndVerticalLines()
         {
             List<Vector> points = new List<Vector>();
             for (int i =0; i< Alllines.Length; i++)
             {
-               points = points.Concat(CalculatePointsCoveredByLine(Alllines[i])).ToList();
+               points = points.Concat(CalculatePointsCoveredByHorizontalAndVerticalLine(Alllines[i])).ToList();
             }
             this.AllPointsCoveredByAllLines = points.ToArray();
         }
 
-        private Vector[] CalculatePointsCoveredByLine(LineSegment lineSegment)
+        private Vector[] CalculatePointsCoveredByHorizontalAndVerticalLine(LineSegment lineSegment)
         {
             List<Vector> points = new List<Vector>();
             if (lineSegment.First.X == lineSegment.Second.X)
@@ -113,8 +227,19 @@ namespace AdventOfCode
             return points.ToArray();
         }
 
-        
+        internal void PrintOccurenceOfHorizontalAndVerticalAndDiagonalPoints()
+        {
+            FillAllPointsCoveredByHorizontalAndVerticalAndDiagonalLines();
+            var distinctPoints = AllPointsCoveredByAllLines.Distinct().ToArray();
 
+            foreach (Vector point in distinctPoints)
+            {
+                point.Occurence = AllPointsCoveredByAllLines.Where(x => x.Equals(point)).Count();
+            }
+
+
+            Console.WriteLine(distinctPoints.Where(x => x.Occurence >= 2).Count());
+        }
     }
 
     public class LineSegment
@@ -137,7 +262,24 @@ namespace AdventOfCode
 
         public override int GetHashCode()
         {
-            return (X + Y).GetHashCode();
+            unchecked
+            {
+                int result = 37; // prime
+
+                result *= 397; // also prime (see note)
+                if (X != null)
+                    result += X.GetHashCode();
+
+                result *= 397;
+                if (Y != null)
+                    result += Y.GetHashCode();
+
+                result *= 397;
+                if (Y != null)
+                    result += Y.GetHashCode();
+
+                return result;
+            }
         }
 
         public bool Equals(Vector other)

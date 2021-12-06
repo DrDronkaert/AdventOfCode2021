@@ -24,8 +24,12 @@ namespace AdventOfCode
             Day4.AdventOfCode42();
             //Console.WriteLine("51:");
             //Day5.AdventOfCode51();
-            Console.WriteLine("52:");
-            Day5.AdventOfCode52();
+            //Console.WriteLine("52:");
+            //Day5.AdventOfCode52();
+            //Console.WriteLine("61:");
+            //Day6.AdventOfCode61();
+            Console.WriteLine("62:");
+            Day6.AdventOfCode62();
         }
     }
 }

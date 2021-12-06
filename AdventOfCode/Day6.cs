@@ -37,10 +37,10 @@ namespace AdventOfCode
 
             for (int i = 0; i < 256; i++)
             {
-                ulong temp = 0 ;
+                ulong newFishesToAddAtTheEndOfTheDay = 0 ;
                 if (numberOfFishesForEachTimer[0] != 0)
                 {
-                    temp = numberOfFishesForEachTimer[0];
+                    newFishesToAddAtTheEndOfTheDay = numberOfFishesForEachTimer[0];
 
                 }
 
@@ -50,19 +50,19 @@ namespace AdventOfCode
                 }
           
                 numberOfFishesForEachTimer[8] = 0;
-                if (temp != 0)
+                if (newFishesToAddAtTheEndOfTheDay != 0)
                 {
-                    numberOfFishesForEachTimer[6] += temp;
-                    numberOfFishesForEachTimer[8] += temp;
+                    numberOfFishesForEachTimer[6] += newFishesToAddAtTheEndOfTheDay;
+                    numberOfFishesForEachTimer[8] += newFishesToAddAtTheEndOfTheDay;
                 }
               
             }
-            ulong t = 0;
-            foreach(var entry in numberOfFishesForEachTimer)
+            ulong totalFishes = 0;
+            foreach (var entry in numberOfFishesForEachTimer)
             {
-                t += entry.Value;
+                totalFishes += entry.Value;
             }
-            Console.WriteLine(t);
+            Console.WriteLine(totalFishes);
         }
     }
     public class LanternFish

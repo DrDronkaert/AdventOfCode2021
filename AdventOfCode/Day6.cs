@@ -25,25 +25,14 @@ namespace AdventOfCode
             var data = ReadFileLogic.CreateArrayFromInputFileName("input6");
             var fishTimers = Array.ConvertAll(data[0].Split(','), int.Parse);
             IDictionary<int, ulong> numberOfFishesForEachTimer = new Dictionary<int, ulong>();
-            numberOfFishesForEachTimer[0] = 0;
-            numberOfFishesForEachTimer[1] = 0;
-            numberOfFishesForEachTimer[2] = 0;
-            numberOfFishesForEachTimer[3] = 0;
-            numberOfFishesForEachTimer[4] = 0;
-            numberOfFishesForEachTimer[5] = 0;
-            numberOfFishesForEachTimer[6] = 0;
-            numberOfFishesForEachTimer[7] = 0;
-            numberOfFishesForEachTimer[8] = 0;
+            for (int x = 0; x <= 8; x++)
+            {
+                numberOfFishesForEachTimer[x] = 0;
+            }
+      
             foreach (int i in fishTimers)
             {
-                if (numberOfFishesForEachTimer.ContainsKey(i))
-                {
-                    numberOfFishesForEachTimer[i]++;
-                }
-                else
-                {
-                    numberOfFishesForEachTimer.Add(i, 1);
-                }
+                 numberOfFishesForEachTimer[i]++;
             }
 
             for (int i = 0; i < 256; i++)
@@ -55,29 +44,19 @@ namespace AdventOfCode
 
                 }
 
-                numberOfFishesForEachTimer[0] = numberOfFishesForEachTimer[1];
-                numberOfFishesForEachTimer[1] = numberOfFishesForEachTimer[2];
-                numberOfFishesForEachTimer[2] = numberOfFishesForEachTimer[3];
-                numberOfFishesForEachTimer[3] = numberOfFishesForEachTimer[4];
-                numberOfFishesForEachTimer[4] = numberOfFishesForEachTimer[5];
-                numberOfFishesForEachTimer[5] = numberOfFishesForEachTimer[6];
-                numberOfFishesForEachTimer[6] = numberOfFishesForEachTimer[7];
-                numberOfFishesForEachTimer[7] = numberOfFishesForEachTimer[8];
-                numberOfFishesForEachTimer[8] = 0;
-                if (temp == 0)
+                for (int x=0; x <=7; x++)
                 {
-                    continue;
+                    numberOfFishesForEachTimer[x] = numberOfFishesForEachTimer[x + 1];
                 }
-                else
+          
+                numberOfFishesForEachTimer[8] = 0;
+                if (temp != 0)
                 {
                     numberOfFishesForEachTimer[6] += temp;
                     numberOfFishesForEachTimer[8] += temp;
                 }
               
-
-
             }
-            var test = numberOfFishesForEachTimer;
             ulong t = 0;
             foreach(var entry in numberOfFishesForEachTimer)
             {
@@ -89,12 +68,11 @@ namespace AdventOfCode
     public class LanternFish
     {
         public int Timer { get; set; }
-        public bool JustBorn { get; set; }
 
-        public LanternFish(int timer, bool justBorn)
+        public LanternFish(int timer)
         {
             this.Timer = timer;
-            this.JustBorn = JustBorn;
+        
         }
 
       
@@ -104,7 +82,7 @@ namespace AdventOfCode
         public List<LanternFish> SchoolOfLanternFish { get; set; }
         public void SpawnNew()
         {
-            SchoolOfLanternFish.Add(new LanternFish(8,true));
+            SchoolOfLanternFish.Add(new LanternFish(8));
 
         }
 
@@ -113,11 +91,7 @@ namespace AdventOfCode
             int newFish = 0;
             for (int i = 0; i < SchoolOfLanternFish.Count(); i++)
             {
-                if (SchoolOfLanternFish[i].Timer == 8 && SchoolOfLanternFish[i].JustBorn == true )
-                {
-                    SchoolOfLanternFish[i].JustBorn = false;
-                    continue;
-                }
+               
                 if (SchoolOfLanternFish[i].Timer > 0)
                 {
                     SchoolOfLanternFish[i].Timer--;
@@ -141,7 +115,7 @@ namespace AdventOfCode
             var fishTimers = Array.ConvertAll( data.Split(','), int.Parse);
             for (int i = 0; i < fishTimers.Length; i++)
             {
-                SchoolOfLanternFish.Add(new LanternFish(fishTimers[i], false));
+                SchoolOfLanternFish.Add(new LanternFish(fishTimers[i]));
             }
         }
     }

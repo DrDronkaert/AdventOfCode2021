@@ -30,6 +30,10 @@ namespace AdventOfCode
             Day6.AdventOfCode61();
             Console.WriteLine("62:");
             Day6.AdventOfCode62();
+            Console.WriteLine("71:");
+            Day7.AdventOfCode71();
+            Console.WriteLine("72:");
+            Day7.AdventOfCode72();
         }
     }
 }

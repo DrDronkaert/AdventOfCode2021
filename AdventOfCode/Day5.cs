@@ -12,14 +12,14 @@ namespace AdventOfCode
         {
             var data = ReadFileLogic.CreateArrayFromInputFileName("input5");
             LinesCalculator l = new(data, false);
-            l.PrintOccurenceOfHorizontalAndVerticalPoints();
+            l.PrintOverlappingPoints();
 
         }
         public static void AdventOfCode52()
         {
             var data = ReadFileLogic.CreateArrayFromInputFileName("input5");
             LinesCalculator l = new(data, true);
-            l.PrintOccurenceOfHorizontalAndVerticalAndDiagonalPoints();
+            l.PrintOverlappingPoints();
 
         }
     }
@@ -33,13 +33,12 @@ namespace AdventOfCode
 
         public List<Vector> AllPointsCoveredByAllLinesUnique { get; set; } = new List<Vector>();
 
-        public int[,] Grid { get; set; }
+        public int[,] Grid { get; set; } = new int[1000, 1000];
 
         public Vector[] IntersectingPoints { get; set; }
 
         public LinesCalculator(string[] data, bool diagonal)
         {
-            this.Grid = new int[1000,1000];
             List<LineSegment> Lines = new();
 
             if (diagonal)
@@ -61,38 +60,51 @@ namespace AdventOfCode
                 Alllines = Lines.ToArray();
                 return;
             }
-            for (int i = 0; i < data.Length; i++)
+            else { 
+                    for (int i = 0; i < data.Length; i++)
+                    {
+                        var points = data[i].Split(new String[] { " -> " }, StringSplitOptions.RemoveEmptyEntries);
+                        var firstXCo = Convert.ToInt32(points[0].Split(',')[0]);
+                        var firstYCo = Convert.ToInt32(points[0].Split(',')[1]);
+
+                        var secondXCo = Convert.ToInt32(points[1].Split(',')[0]);
+                        var secondYCo = Convert.ToInt32(points[1].Split(',')[1]);
+
+                        if (firstXCo == secondXCo || firstYCo == secondYCo) Lines.Add(new LineSegment { First = new Vector(firstXCo, firstYCo), Second = new Vector(secondXCo, secondYCo) });
+
+                    }
+            Alllines = Lines.ToArray();
+            }
+
+        }
+        public void PrintOverlappingPoints()
+        {
+            FillGridWithOverLappingPoints();
+            var counter = 0;
+            foreach (var i in Grid)
             {
-                var points = data[i].Split(new String[] { " -> " }, StringSplitOptions.RemoveEmptyEntries);
-                var firstXCo = Convert.ToInt32(points[0].Split(',')[0]);
-                var firstYCo = Convert.ToInt32(points[0].Split(',')[1]);
-
-                var secondXCo = Convert.ToInt32(points[1].Split(',')[0]);
-                var secondYCo = Convert.ToInt32(points[1].Split(',')[1]);
-
-                if (firstXCo == secondXCo || firstYCo == secondYCo) Lines.Add(new LineSegment { First = new Vector(firstXCo, firstYCo), Second = new Vector(secondXCo, secondYCo) });
-
+                if (i > 1) counter++;
             }
 
 
-            Alllines = Lines.ToArray();
-
+            Console.WriteLine(counter);
         }
-
-        private void FillAllPointsCoveredByHorizontalAndVerticalAndDiagonalLines()
+        private void FillGridWithOverLappingPoints()
         {
-            List<Vector> points = new List<Vector>();
             for (int i = 0; i < Alllines.Length; i++)
             {
-                CalculatePointsCoveredByHorizontalAndVerticalAndDiagonalLine(Alllines[i]);
+                AddPointsCoveredByLineSegmentToGrid(Alllines[i]);
             }
         }
 
-        private void CalculatePointsCoveredByHorizontalAndVerticalAndDiagonalLine(LineSegment lineSegment)
+        private void AddPointsCoveredByLineSegmentToGrid(LineSegment lineSegment)
         {
-            if (lineSegment.First.X == lineSegment.Second.X || lineSegment.First.Y == lineSegment.Second.Y)
+            bool vertical = lineSegment.First.X == lineSegment.Second.X;
+            bool horizontal = lineSegment.First.Y == lineSegment.Second.Y;
+
+            if (horizontal || vertical)
             {
-                if (lineSegment.First.X == lineSegment.Second.X)
+                if (vertical)
                 {
                     if (lineSegment.First.Y > lineSegment.Second.Y)
                     {
@@ -113,7 +125,7 @@ namespace AdventOfCode
                         }
                     }
                 }
-                if (lineSegment.First.Y == lineSegment.Second.Y)
+                if (horizontal)
                 {
                     if (lineSegment.First.X > lineSegment.Second.X)
                     {
@@ -151,90 +163,8 @@ namespace AdventOfCode
             }
         }
 
-        public void PrintOccurenceOfHorizontalAndVerticalPoints()
-        {
-            FillAllPointsCoveredByHorizontalAndVerticalLines();
+       
 
-            var counter = 0;
-            foreach (var i in Grid)
-            {
-                if (i > 1) counter++;
-            }
-
-
-            Console.WriteLine(counter);
-        }
-
-        private void FillAllPointsCoveredByHorizontalAndVerticalLines()
-        {
-            List<Vector> points = new List<Vector>();
-            for (int i =0; i< Alllines.Length; i++)
-            {
-               CalculatePointsCoveredByHorizontalAndVerticalLine(Alllines[i]);
-            }
-        }
-
-        private void CalculatePointsCoveredByHorizontalAndVerticalLine(LineSegment lineSegment)
-        {
-            List<Vector> points = new List<Vector>();
-            if (lineSegment.First.X == lineSegment.Second.X)
-            {
-                if (lineSegment.First.Y > lineSegment.Second.Y)
-                {
-                    for (int i = Convert.ToInt32( lineSegment.Second.Y); i <= lineSegment.First.Y; i++)
-                    {
-                        var v = new Vector(lineSegment.First.X, i) ;
-                        Grid[Convert.ToInt32(v.X), Convert.ToInt32(v.Y)]++;
-
-                    }
-                }
-                else
-                {
-                    for (int i = Convert.ToInt32(lineSegment.First.Y); i <= lineSegment.Second.Y; i++)
-                    {
-                      var v = new Vector(lineSegment.First.X, i);
-                        Grid[Convert.ToInt32(v.X), Convert.ToInt32(v.Y)]++;
-
-                    }
-                }
-            }
-            if (lineSegment.First.Y == lineSegment.Second.Y)
-            {
-                if (lineSegment.First.X > lineSegment.Second.X)
-                {
-                    for (int i = Convert.ToInt32(lineSegment.Second.X); i <= lineSegment.First.X; i++)
-                    {
-                       
-                        var v = new Vector( i, lineSegment.First.Y);
-                        Grid[Convert.ToInt32(v.X), Convert.ToInt32(v.Y)]++;
-
-                    }
-                }
-                else
-                {
-                    for (int i = Convert.ToInt32(lineSegment.First.X); i <= lineSegment.Second.X; i++)
-                    {
-                        var v = new Vector(i, lineSegment.Second.Y);
-                        Grid[Convert.ToInt32(v.X), Convert.ToInt32(v.Y)]++;
-
-                    }
-                }
-            }
-        }
-
-        internal void PrintOccurenceOfHorizontalAndVerticalAndDiagonalPoints()
-        {
-            FillAllPointsCoveredByHorizontalAndVerticalAndDiagonalLines();
-            var counter = 0;
-            foreach (var i in Grid)
-            {
-                if (i > 1) counter++;
-            }
-
-
-            Console.WriteLine(counter);
-
-        }
     }
 
     public class LineSegment

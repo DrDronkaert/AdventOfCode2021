@@ -16,7 +16,7 @@ namespace AdventOfCode
             {
                 school.ADayPasses();
             }
-            Console.WriteLine(school.SchoolOfLanternFish.Count());
+            Console.WriteLine(school.SchoolOfLanternFish.Count);
            
             
         }

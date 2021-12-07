@@ -41,10 +41,8 @@ namespace AdventOfCode
                 {
                     var steps = Math.Abs(horizontalPos[x] - i);
 
-                    for (int y=1; y <= steps; y++)
-                    {
-                        fuel += y;
-                    }
+                    fuel += (steps * (steps + 1)) / 2;
+
                 }
                 fuelcosts[i] = fuel;
             }

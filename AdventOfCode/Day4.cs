@@ -12,13 +12,14 @@ namespace AdventOfCode
         {
             var data = ReadFileLogic.CreateArrayFromInputFileName("input4");
             var bingo = new Bingo(data);
-            bingo.StartFindingNumbersInBoards();
+            bingo.PrintFirst();
+
         }
         public static void AdventOfCode42()
         {
             var data = ReadFileLogic.CreateArrayFromInputFileName("input4");
             var bingo = new Bingo(data);
-            bingo.CompleteAllBoardsAndCheckLast();
+            bingo.PrintLast();
         }
     }
 
@@ -26,12 +27,14 @@ namespace AdventOfCode
     public class Bingo
     {
         public int[] NumbersToDrawFrom { get; set; }
-        public Board[] Boards { get; set; }
+        public Board[] AllBoards { get; set; }
+        public List<Board> SolvedBoards { get; set; } = new();
 
         public Bingo(string[] data)
         {
             NumbersToDrawFrom = Array.ConvertAll(data[0].Split(','), int.Parse);
-            Boards = FillInBoards(data);
+            AllBoards = FillInBoards(data);
+            this.CompleteBingoForAllBoards();
         }
 
         private Board[] FillInBoards(string[] data)
@@ -42,173 +45,100 @@ namespace AdventOfCode
             {
                 if (data[i] == "")
                 {
-                    Board b = new Board();
                     Row firstR = new(Array.ConvertAll(data[i + 1].Split(new String[] { "  ", " " }, StringSplitOptions.RemoveEmptyEntries), int.Parse));
                     Row secondR = new(Array.ConvertAll(data[i + 2].Split(new String[] { "  ", " " }, StringSplitOptions.RemoveEmptyEntries), int.Parse));
                     Row thirdR = new(Array.ConvertAll(data[i + 3].Split(new String[] { "  ", " " }, StringSplitOptions.RemoveEmptyEntries), int.Parse));
                     Row fourthR = new(Array.ConvertAll(data[i + 4].Split(new String[] { "  ", " " }, StringSplitOptions.RemoveEmptyEntries), int.Parse));
                     Row fifthR = new(Array.ConvertAll(data[i + 5].Split(new String[] { "  ", " " }, StringSplitOptions.RemoveEmptyEntries), int.Parse));
 
-                    Column firstC = new(new[] { firstR.NumbersInRow[0], secondR.NumbersInRow[0], thirdR.NumbersInRow[0], fourthR.NumbersInRow[0], fifthR.NumbersInRow[0] });
-                    Column secondC = new(new[] { firstR.NumbersInRow[1], secondR.NumbersInRow[1], thirdR.NumbersInRow[1], fourthR.NumbersInRow[1], fifthR.NumbersInRow[1] });
-                    Column thirdC = new(new[] { firstR.NumbersInRow[2], secondR.NumbersInRow[2], thirdR.NumbersInRow[2], fourthR.NumbersInRow[2], fifthR.NumbersInRow[2] });
-                    Column fourthC = new(new[] { firstR.NumbersInRow[3], secondR.NumbersInRow[3], thirdR.NumbersInRow[3], fourthR.NumbersInRow[3], fifthR.NumbersInRow[3] });
-                    Column fifthC = new(new[] { firstR.NumbersInRow[4], secondR.NumbersInRow[4], thirdR.NumbersInRow[4], fourthR.NumbersInRow[4], fifthR.NumbersInRow[4] });
 
-                    boards.Add(new(id, new[] { firstR, secondR, thirdR, fourthR, fifthR }, new[] { firstC, secondC, thirdC, fourthC, fifthC }, false));
+                    boards.Add(new(id, new[] { firstR, secondR, thirdR, fourthR, fifthR }));
+                    id++;
                 }
             }
             return boards.ToArray();
         }
 
-        internal void StartFindingNumbersInBoards()
+        internal void CompleteBingoForAllBoards()
         {
-
             for (int i = 0; i < NumbersToDrawFrom.Length; i++)
             {
-                foreach (Board b in Boards)
-                {
-                    foreach (Column c in b.Columns)
+                for (int a =0; a < AllBoards.Length; a++) {
+
+                    if (SolvedBoards.Any(x => x.Id == AllBoards[a].Id)) continue;
+                   for (int x = 0; x < 5; x++)
                     {
-                        if (c.NumbersInColumn.Contains(NumbersToDrawFrom[i])) c.NumbersInColumn[Array.IndexOf(c.NumbersInColumn, NumbersToDrawFrom[i])] = -1;
-                    }
-                    foreach (Row r in b.Rows)
-                    {
-                        if (r.NumbersInRow.Contains(NumbersToDrawFrom[i])) r.NumbersInRow[Array.IndexOf(r.NumbersInRow, NumbersToDrawFrom[i])] = -1;
-                    }
-                    if (b.Columns.Any(x => x.NumbersInColumn.SequenceEqual(new[] { -1, -1, -1, -1, -1 })))
-                    {
-                        int sumUnmarked = 0;
-                        foreach (Column c in b.Columns)
+                        var rowValid = true;
+                        var columnValid = true;
+                        for (int y = 0; y < 5; y++)
                         {
-                            foreach (var number1 in c.NumbersInColumn)
-                            {
-                                if (number1 != -1) sumUnmarked += number1;
-                            }
+                            if (AllBoards[a].Rows[x].NumbersInRow[y] == NumbersToDrawFrom[i]) AllBoards[a].Rows[x].NumbersInRow[y] = -1;
+                            if (AllBoards[a].Rows[y].NumbersInRow[x] == NumbersToDrawFrom[i]) AllBoards[a].Rows[y].NumbersInRow[x] = -1;
+                            if (AllBoards[a].Rows[x].NumbersInRow[y] != -1) rowValid = false;
+                            if (AllBoards[a].Rows[y].NumbersInRow[x] != -1) columnValid = false;
+
+                        }
+                        if (rowValid || columnValid)
+                        {
+                            Board b = AllBoards[a];
+                            b.NumberToComplete = NumbersToDrawFrom[i];
+                            if (!SolvedBoards.Any(x => x.Id == b.Id)) SolvedBoards.Add(b);
+                            
                         }
 
-                        Console.WriteLine(sumUnmarked * NumbersToDrawFrom[i]);
-                        b.HasWon = true;
-                        return;
-
-
                     }
-                    if (b.Rows.Any(x => x.NumbersInRow.SequenceEqual(new[] { -1, -1, -1, -1, -1 })))
-                    {
-                        int sumUnmarked = 0;
-                        foreach (Column c in b.Columns)
-                        {
-                            foreach (var number1 in c.NumbersInColumn)
-                            {
-                                if (number1 != -1) sumUnmarked += number1;
-                            }
-                        }
 
-                        Console.WriteLine(sumUnmarked * NumbersToDrawFrom[i]);
-                        b.HasWon = true;
-                        return;
-
-                    }
 
                 }
-
-            }
-
+            
+        }
 
         }
 
-        internal void CompleteAllBoardsAndCheckLast()
+        public void PrintLast()
         {
-            List<int> IdsOfCompletedBoards = new();
-
-            for (int i = 0; i < NumbersToDrawFrom.Length; i++)
-            {
-                foreach (Board b in Boards)
-                {
-                    foreach (Column c in b.Columns)
-                    {
-                        if (c.NumbersInColumn.Contains(NumbersToDrawFrom[i])) c.NumbersInColumn[Array.IndexOf(c.NumbersInColumn, NumbersToDrawFrom[i])] = -1;
-                    }
+      
+                int sumUnmarked = 0;
+                 var b = SolvedBoards.Last();
                     foreach (Row r in b.Rows)
                     {
-                        if (r.NumbersInRow.Contains(NumbersToDrawFrom[i])) r.NumbersInRow[Array.IndexOf(r.NumbersInRow, NumbersToDrawFrom[i])] = -1;
-                    }
-                    if (b.Columns.Any(x => x.NumbersInColumn.SequenceEqual(new[] { -1, -1, -1, -1, -1 })))
-                    {
-                        IdsOfCompletedBoards.Add(b.Id);
-                        IdsOfCompletedBoards = IdsOfCompletedBoards.Distinct<int>().ToList();
-                        if (IdsOfCompletedBoards.Count == Boards.Length)
+                        foreach (var number1 in r.NumbersInRow)
                         {
-                            int sumUnmarked = 0;
-                            foreach (Board b2 in Boards.Where(b => b.Id == IdsOfCompletedBoards.Last()))
-                            {
-                                foreach (Column c in b2.Columns)
-                                {
-                                    foreach (var number1 in c.NumbersInColumn)
-                                    {
-                                        if (number1 != -1) sumUnmarked += number1;
-                                    }
-                                }
-                            }
-
-                            Console.WriteLine(sumUnmarked * NumbersToDrawFrom[i]);
-                            return;
-
+                            if (number1 != -1) sumUnmarked += number1;
                         }
-
-
                     }
-                    if (b.Rows.Any(x => x.NumbersInRow.SequenceEqual(new[] { -1, -1, -1, -1, -1 })))
-                    {
-                        IdsOfCompletedBoards.Add(b.Id);
-                        IdsOfCompletedBoards = IdsOfCompletedBoards.Distinct<int>().ToList();
-                        if (IdsOfCompletedBoards.Count == Boards.Length)
-                        {
-                            int sumUnmarked = 0;
-                            foreach (Board b2 in Boards.Where(b => b.Id == IdsOfCompletedBoards.Last()))
-                            {
-                                foreach (Column c in b2.Columns)
-                                {
-                                    foreach (var number1 in c.NumbersInColumn)
-                                    {
-                                        if (number1 != -1) sumUnmarked += number1;
-                                    }
-                                }
-                            }
+                    Console.WriteLine(sumUnmarked * b.NumberToComplete );
+          
+        }
 
-                            Console.WriteLine(sumUnmarked * NumbersToDrawFrom[i]);
-                            return;
-                        }
-
-                    }
-
+        public void PrintFirst()
+        {
+            int sumUnmarked = 0;
+            var b = SolvedBoards.First();
+            foreach (Row r in b.Rows)
+            {
+                foreach (var number1 in r.NumbersInRow)
+                {
+                    if (number1 != -1) sumUnmarked += number1;
                 }
-
             }
-
-
-
+            Console.WriteLine(sumUnmarked * b.NumberToComplete);
         }
     }
+
 
     public class Board
     {
         public int Id { get; set; }
         public Row[] Rows { get; set; }
-        public Column[] Columns { get; set; }
 
-        public bool HasWon { get; set; }
 
-        public Board()
-        {
+        public int NumberToComplete { get; set; }
 
-        }
-        public Board(int id, Row[] rows, Column[] columns, bool hasWon)
+        public Board(int id, Row[] rows)
         {
             Id = id;
             Rows = rows;
-            Columns = columns;
-            HasWon = hasWon;
         }
     }
     public class Row
@@ -220,16 +150,7 @@ namespace AdventOfCode
             NumbersInRow = data;
         }
     }
-    public class Column
-    {
-        public int[] NumbersInColumn { get; set; }
 
-        public Column(int[] data)
-        {
-            NumbersInColumn = data;
-        }
-
-    }
 }
 
 

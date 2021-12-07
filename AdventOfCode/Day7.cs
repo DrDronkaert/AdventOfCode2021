@@ -11,15 +11,15 @@ namespace AdventOfCode
         public static void AdventOfCode71()
         {
             var data = ReadFileLogic.CreateArrayFromInputFileName("input7");
-            int[] horizontalPos = Array.ConvertAll(data[0].Split(','), int.Parse) ;
+            int[] horizontalPos = Array.ConvertAll(data[0].Split(','), int.Parse);
             int[] fuelcosts = new int[horizontalPos.Max()];
 
-            for (int i =0; i < fuelcosts.Length; i++)
+            for (int i = 0; i < fuelcosts.Length; i++)
             {
                 var fuel = 0;
-                for (int x=0; x< horizontalPos.Length; x++)
+                for (int x = 0; x < horizontalPos.Length; x++)
                 {
-                    fuel += Math.Abs( horizontalPos[x] - i);
+                    fuel += Math.Abs(horizontalPos[x] - i);
                 }
                 fuelcosts[i] = fuel;
             }
@@ -47,7 +47,7 @@ namespace AdventOfCode
                 fuelcosts[i] = fuel;
             }
 
-           Console.WriteLine(fuelcosts.Min());
+            Console.WriteLine(fuelcosts.Min());
 
         }
     }

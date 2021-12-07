@@ -20,7 +20,7 @@ namespace AdventOfCode
             var bingo = new Bingo(data);
             bingo.CompleteAllBoardsAndCheckLast();
         }
-    } 
+    }
 
 
     public class Bingo
@@ -38,12 +38,12 @@ namespace AdventOfCode
         {
             int id = 1;
             List<Board> boards = new();
-            for (int i=0;i <data.Length; i++)
+            for (int i = 0; i < data.Length; i++)
             {
                 if (data[i] == "")
                 {
                     Board b = new Board();
-                    Row firstR = new(Array.ConvertAll(data[i + 1].Split(new String[] { "  ", " "}, StringSplitOptions.RemoveEmptyEntries), int.Parse));
+                    Row firstR = new(Array.ConvertAll(data[i + 1].Split(new String[] { "  ", " " }, StringSplitOptions.RemoveEmptyEntries), int.Parse));
                     Row secondR = new(Array.ConvertAll(data[i + 2].Split(new String[] { "  ", " " }, StringSplitOptions.RemoveEmptyEntries), int.Parse));
                     Row thirdR = new(Array.ConvertAll(data[i + 3].Split(new String[] { "  ", " " }, StringSplitOptions.RemoveEmptyEntries), int.Parse));
                     Row fourthR = new(Array.ConvertAll(data[i + 4].Split(new String[] { "  ", " " }, StringSplitOptions.RemoveEmptyEntries), int.Parse));
@@ -55,8 +55,7 @@ namespace AdventOfCode
                     Column fourthC = new(new[] { firstR.NumbersInRow[3], secondR.NumbersInRow[3], thirdR.NumbersInRow[3], fourthR.NumbersInRow[3], fifthR.NumbersInRow[3] });
                     Column fifthC = new(new[] { firstR.NumbersInRow[4], secondR.NumbersInRow[4], thirdR.NumbersInRow[4], fourthR.NumbersInRow[4], fifthR.NumbersInRow[4] });
 
-                    boards.Add(new() { Id=id, Columns = new[] { firstC, secondC, thirdC, fourthC, fifthC }, Rows = new[] { firstR, secondR, thirdR, fourthR, fifthR } });
-                    id++;
+                    boards.Add(new(id, new[] { firstR, secondR, thirdR, fourthR, fifthR }, new[] { firstC, secondC, thirdC, fourthC, fifthC }, false));
                 }
             }
             return boards.ToArray();
@@ -65,55 +64,56 @@ namespace AdventOfCode
         internal void StartFindingNumbersInBoards()
         {
 
-                for (int i = 0; i < NumbersToDrawFrom.Length; i++)
+            for (int i = 0; i < NumbersToDrawFrom.Length; i++)
+            {
+                foreach (Board b in Boards)
                 {
-                    foreach (Board b in Boards)
+                    foreach (Column c in b.Columns)
                     {
-                       foreach (Column c in b.Columns)
+                        if (c.NumbersInColumn.Contains(NumbersToDrawFrom[i])) c.NumbersInColumn[Array.IndexOf(c.NumbersInColumn, NumbersToDrawFrom[i])] = -1;
+                    }
+                    foreach (Row r in b.Rows)
+                    {
+                        if (r.NumbersInRow.Contains(NumbersToDrawFrom[i])) r.NumbersInRow[Array.IndexOf(r.NumbersInRow, NumbersToDrawFrom[i])] = -1;
+                    }
+                    if (b.Columns.Any(x => x.NumbersInColumn.SequenceEqual(new[] { -1, -1, -1, -1, -1 })))
+                    {
+                        int sumUnmarked = 0;
+                        foreach (Column c in b.Columns)
                         {
-                            if (c.NumbersInColumn.Contains(NumbersToDrawFrom[i])) c.NumbersInColumn[Array.IndexOf(c.NumbersInColumn, NumbersToDrawFrom[i])] = -1;
-                        }
-                       foreach (Row r in b.Rows)
-                        {
-                            if (r.NumbersInRow.Contains(NumbersToDrawFrom[i])) r.NumbersInRow[Array.IndexOf(r.NumbersInRow, NumbersToDrawFrom[i])] = -1;
-                        }
-                        if (b.Columns.Any(x => x.NumbersInColumn.SequenceEqual(new[] { -1, -1, -1, -1, -1 }))) {
-                            int sumUnmarked = 0;
-                            foreach (Column c in b.Columns)
+                            foreach (var number1 in c.NumbersInColumn)
                             {
-                                foreach (var number1 in c.NumbersInColumn)
-                                {
-                                    if (number1 != -1) sumUnmarked += number1;
-                                }
+                                if (number1 != -1) sumUnmarked += number1;
                             }
-
-                            Console.WriteLine(sumUnmarked * NumbersToDrawFrom[i]);
-                            b.HasWon = true;
-                            return;
-
-
                         }
-                        if (b.Rows.Any(x => x.NumbersInRow.SequenceEqual(new[] { -1, -1, -1, -1, -1 })))
+
+                        Console.WriteLine(sumUnmarked * NumbersToDrawFrom[i]);
+                        b.HasWon = true;
+                        return;
+
+
+                    }
+                    if (b.Rows.Any(x => x.NumbersInRow.SequenceEqual(new[] { -1, -1, -1, -1, -1 })))
+                    {
+                        int sumUnmarked = 0;
+                        foreach (Column c in b.Columns)
                         {
-                            int sumUnmarked = 0;
-                            foreach (Column c in b.Columns)
+                            foreach (var number1 in c.NumbersInColumn)
                             {
-                                foreach (var number1 in c.NumbersInColumn)
-                                {
-                                    if (number1 != -1) sumUnmarked += number1;
-                                }
+                                if (number1 != -1) sumUnmarked += number1;
                             }
-
-                            Console.WriteLine(sumUnmarked * NumbersToDrawFrom[i]);
-                            b.HasWon = true;
-                            return;
-
                         }
+
+                        Console.WriteLine(sumUnmarked * NumbersToDrawFrom[i]);
+                        b.HasWon = true;
+                        return;
 
                     }
 
-        }
-           
+                }
+
+            }
+
 
         }
 
@@ -121,75 +121,76 @@ namespace AdventOfCode
         {
             List<int> IdsOfCompletedBoards = new();
 
-                for (int i = 0; i < NumbersToDrawFrom.Length; i++)
+            for (int i = 0; i < NumbersToDrawFrom.Length; i++)
+            {
+                foreach (Board b in Boards)
                 {
-                    foreach (Board b in Boards)
+                    foreach (Column c in b.Columns)
                     {
-                        foreach (Column c in b.Columns)
+                        if (c.NumbersInColumn.Contains(NumbersToDrawFrom[i])) c.NumbersInColumn[Array.IndexOf(c.NumbersInColumn, NumbersToDrawFrom[i])] = -1;
+                    }
+                    foreach (Row r in b.Rows)
+                    {
+                        if (r.NumbersInRow.Contains(NumbersToDrawFrom[i])) r.NumbersInRow[Array.IndexOf(r.NumbersInRow, NumbersToDrawFrom[i])] = -1;
+                    }
+                    if (b.Columns.Any(x => x.NumbersInColumn.SequenceEqual(new[] { -1, -1, -1, -1, -1 })))
+                    {
+                        IdsOfCompletedBoards.Add(b.Id);
+                        IdsOfCompletedBoards = IdsOfCompletedBoards.Distinct<int>().ToList();
+                        if (IdsOfCompletedBoards.Count == Boards.Length)
                         {
-                            if (c.NumbersInColumn.Contains(NumbersToDrawFrom[i])) c.NumbersInColumn[Array.IndexOf(c.NumbersInColumn, NumbersToDrawFrom[i])] = -1;
-                        }
-                        foreach (Row r in b.Rows)
-                        {
-                            if (r.NumbersInRow.Contains(NumbersToDrawFrom[i])) r.NumbersInRow[Array.IndexOf(r.NumbersInRow, NumbersToDrawFrom[i])] = -1;
-                        }
-                        if (b.Columns.Any(x => x.NumbersInColumn.SequenceEqual(new[] { -1, -1, -1, -1, -1 })))
-                        {
-                            IdsOfCompletedBoards.Add(b.Id);
-                            IdsOfCompletedBoards = IdsOfCompletedBoards.Distinct<int>().ToList();
-                            if (IdsOfCompletedBoards.Count == Boards.Length)
+                            int sumUnmarked = 0;
+                            foreach (Board b2 in Boards.Where(b => b.Id == IdsOfCompletedBoards.Last()))
                             {
-                                int sumUnmarked = 0;
-                                foreach (Board b2 in Boards.Where(b => b.Id == IdsOfCompletedBoards.ElementAt(99)))
+                                foreach (Column c in b2.Columns)
                                 {
-                                    foreach (Column c in b2.Columns)
-                                    {
-                                        foreach (var number1 in c.NumbersInColumn)
-                                        {
-                                            if (number1 != -1) sumUnmarked += number1;
-                                        }
-                                    }
-                                }
-
-                                Console.WriteLine(sumUnmarked * NumbersToDrawFrom[i]);
-                                return;
-
-                            }
-
-
-                        }
-                        if (b.Rows.Any(x => x.NumbersInRow.SequenceEqual(new[] { -1, -1, -1, -1, -1 })))
-                        {
-                            IdsOfCompletedBoards.Add(b.Id);
-                            IdsOfCompletedBoards = IdsOfCompletedBoards.Distinct<int>().ToList();
-                            if (IdsOfCompletedBoards.Count == Boards.Length)
-                            {
-                                int sumUnmarked = 0;
-                                foreach (Board b2 in Boards.Where(b => b.Id == IdsOfCompletedBoards.ElementAt(99)))
-                                {
-                                    foreach (Column c in b2.Columns) { 
                                     foreach (var number1 in c.NumbersInColumn)
                                     {
                                         if (number1 != -1) sumUnmarked += number1;
                                     }
+                                }
+                            }
+
+                            Console.WriteLine(sumUnmarked * NumbersToDrawFrom[i]);
+                            return;
+
+                        }
+
+
+                    }
+                    if (b.Rows.Any(x => x.NumbersInRow.SequenceEqual(new[] { -1, -1, -1, -1, -1 })))
+                    {
+                        IdsOfCompletedBoards.Add(b.Id);
+                        IdsOfCompletedBoards = IdsOfCompletedBoards.Distinct<int>().ToList();
+                        if (IdsOfCompletedBoards.Count == Boards.Length)
+                        {
+                            int sumUnmarked = 0;
+                            foreach (Board b2 in Boards.Where(b => b.Id == IdsOfCompletedBoards.Last()))
+                            {
+                                foreach (Column c in b2.Columns)
+                                {
+                                    foreach (var number1 in c.NumbersInColumn)
+                                    {
+                                        if (number1 != -1) sumUnmarked += number1;
                                     }
                                 }
-
-                                Console.WriteLine(sumUnmarked * NumbersToDrawFrom[i]);
-                                return;
                             }
-                                
+
+                            Console.WriteLine(sumUnmarked * NumbersToDrawFrom[i]);
+                            return;
                         }
 
                     }
 
+                }
+
             }
-          
-            
+
+
 
         }
     }
-    }
+
     public class Board
     {
         public int Id { get; set; }
@@ -202,8 +203,14 @@ namespace AdventOfCode
         {
 
         }
+        public Board(int id, Row[] rows, Column[] columns, bool hasWon)
+        {
+            Id = id;
+            Rows = rows;
+            Columns = columns;
+            HasWon = hasWon;
+        }
     }
-
     public class Row
     {
         public int[] NumbersInRow { get; set; }
@@ -223,5 +230,8 @@ namespace AdventOfCode
         }
 
     }
+}
+
+
 
 

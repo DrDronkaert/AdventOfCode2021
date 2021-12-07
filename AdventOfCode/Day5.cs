@@ -30,7 +30,7 @@ namespace AdventOfCode
         private readonly LineSegment[] Alllines;
 
 
-        private readonly int[,] Grid  = new int[1000, 1000];
+        private readonly int[,] Grid = new int[1000, 1000];
 
         public LinesCalculator(string[] data, bool diagonal)
         {
@@ -43,7 +43,8 @@ namespace AdventOfCode
                     var points = data[i].Split(new String[] { " -> " }, StringSplitOptions.RemoveEmptyEntries);
 
                     Lines.Add(
-                        new LineSegment {
+                        new LineSegment
+                        {
                             First = new Vector(Convert.ToInt32(points[0].Split(',')[0]), Convert.ToInt32(points[0].Split(',')[1])),
                             Second = new Vector(Convert.ToInt32(points[1].Split(',')[0]), Convert.ToInt32(points[1].Split(',')[1]))
                         });
@@ -54,21 +55,22 @@ namespace AdventOfCode
                 Alllines = Lines.ToArray();
                 return;
             }
-            else { 
-                    for (int i = 0; i < data.Length; i++)
-                    {
-                        var points = data[i].Split(new String[] { " -> " }, StringSplitOptions.RemoveEmptyEntries);
+            else
+            {
+                for (int i = 0; i < data.Length; i++)
+                {
+                    var points = data[i].Split(new String[] { " -> " }, StringSplitOptions.RemoveEmptyEntries);
 
-                        if (Convert.ToInt32(points[0].Split(',')[0]) == Convert.ToInt32(points[1].Split(',')[0]) || Convert.ToInt32(points[0].Split(',')[1]) == Convert.ToInt32(points[1].Split(',')[1]))
-                                Lines.Add(
-                                    new LineSegment
-                                    {
-                                        First = new Vector(Convert.ToInt32(points[0].Split(',')[0]), Convert.ToInt32(points[0].Split(',')[1])),
-                                        Second = new Vector(Convert.ToInt32(points[1].Split(',')[0]), Convert.ToInt32(points[1].Split(',')[1]))
-                                    });
+                    if (Convert.ToInt32(points[0].Split(',')[0]) == Convert.ToInt32(points[1].Split(',')[0]) || Convert.ToInt32(points[0].Split(',')[1]) == Convert.ToInt32(points[1].Split(',')[1]))
+                        Lines.Add(
+                            new LineSegment
+                            {
+                                First = new Vector(Convert.ToInt32(points[0].Split(',')[0]), Convert.ToInt32(points[0].Split(',')[1])),
+                                Second = new Vector(Convert.ToInt32(points[1].Split(',')[0]), Convert.ToInt32(points[1].Split(',')[1]))
+                            });
 
-                    }
-            Alllines = Lines.ToArray();
+                }
+                Alllines = Lines.ToArray();
             }
 
         }
@@ -126,7 +128,8 @@ namespace AdventOfCode
                     }
                 }
             }
-           else {
+            else
+            {
                 int length = Math.Abs(Convert.ToInt32(lineSegment.First.X) - Convert.ToInt32(lineSegment.Second.X)) + 1;
                 int xDirection = lineSegment.First.X < lineSegment.Second.X ? 1 : -1;
                 int yDirection = lineSegment.First.Y < lineSegment.Second.Y ? 1 : -1;
@@ -141,7 +144,7 @@ namespace AdventOfCode
             }
         }
 
-       
+
 
     }
 
@@ -154,16 +157,16 @@ namespace AdventOfCode
 
 
 
-    public class Vector 
+    public class Vector
     {
         public int X;
         public int Y;
 
         public Vector(int x, int y) { X = x; Y = y; }
 
-       
+
     }
-  
+
 }
 
 

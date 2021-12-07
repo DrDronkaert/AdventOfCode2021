@@ -23,21 +23,22 @@ namespace AdventOfCode
         }
     }
 
-
     public class Bingo
     {
-        public int[] NumbersToDrawFrom { get; set; }
-        public Board[] AllBoards { get; set; }
-        public List<Board> SolvedBoards { get; set; } = new();
+        private int[] NumbersToDrawFrom;
+
+        private Board[] AllBoards;
+
+        private List<Board> SolvedBoards = new();
 
         public Bingo(string[] data)
         {
             NumbersToDrawFrom = Array.ConvertAll(data[0].Split(','), int.Parse);
-            AllBoards = FillInBoards(data);
+            FillInBoards(data);
             this.CompleteBingoForAllBoards();
         }
 
-        private Board[] FillInBoards(string[] data)
+        private void FillInBoards(string[] data)
         {
             int id = 1;
             List<Board> boards = new();
@@ -45,28 +46,49 @@ namespace AdventOfCode
             {
                 if (data[i] == "")
                 {
-                    Row firstR = new(Array.ConvertAll(data[i + 1].Split(new String[] { "  ", " " }, StringSplitOptions.RemoveEmptyEntries), int.Parse));
-                    Row secondR = new(Array.ConvertAll(data[i + 2].Split(new String[] { "  ", " " }, StringSplitOptions.RemoveEmptyEntries), int.Parse));
-                    Row thirdR = new(Array.ConvertAll(data[i + 3].Split(new String[] { "  ", " " }, StringSplitOptions.RemoveEmptyEntries), int.Parse));
-                    Row fourthR = new(Array.ConvertAll(data[i + 4].Split(new String[] { "  ", " " }, StringSplitOptions.RemoveEmptyEntries), int.Parse));
-                    Row fifthR = new(Array.ConvertAll(data[i + 5].Split(new String[] { "  ", " " }, StringSplitOptions.RemoveEmptyEntries), int.Parse));
+                    Row firstR = new(Array.ConvertAll(data[i + 1].Split(new String[] {
+            "  ",
+            " "
+          }, StringSplitOptions.RemoveEmptyEntries), int.Parse));
+                    Row secondR = new(Array.ConvertAll(data[i + 2].Split(new String[] {
+            "  ",
+            " "
+          }, StringSplitOptions.RemoveEmptyEntries), int.Parse));
+                    Row thirdR = new(Array.ConvertAll(data[i + 3].Split(new String[] {
+            "  ",
+            " "
+          }, StringSplitOptions.RemoveEmptyEntries), int.Parse));
+                    Row fourthR = new(Array.ConvertAll(data[i + 4].Split(new String[] {
+            "  ",
+            " "
+          }, StringSplitOptions.RemoveEmptyEntries), int.Parse));
+                    Row fifthR = new(Array.ConvertAll(data[i + 5].Split(new String[] {
+            "  ",
+            " "
+          }, StringSplitOptions.RemoveEmptyEntries), int.Parse));
 
-
-                    boards.Add(new(id, new[] { firstR, secondR, thirdR, fourthR, fifthR }));
+                    boards.Add(new(id, new[] {
+            firstR,
+            secondR,
+            thirdR,
+            fourthR,
+            fifthR
+          }));
                     id++;
                 }
             }
-            return boards.ToArray();
+            AllBoards= boards.ToArray();
         }
 
         internal void CompleteBingoForAllBoards()
         {
             for (int i = 0; i < NumbersToDrawFrom.Length; i++)
             {
-                for (int a =0; a < AllBoards.Length; a++) {
+                for (int a = 0; a < AllBoards.Length; a++)
+                {
 
                     if (SolvedBoards.Any(x => x.Id == AllBoards[a].Id)) continue;
-                   for (int x = 0; x < 5; x++)
+                    for (int x = 0; x < 5; x++)
                     {
                         var rowValid = true;
                         var columnValid = true;
@@ -83,32 +105,31 @@ namespace AdventOfCode
                             Board b = AllBoards[a];
                             b.NumberToComplete = NumbersToDrawFrom[i];
                             if (!SolvedBoards.Any(x => x.Id == b.Id)) SolvedBoards.Add(b);
-                            
+
                         }
 
                     }
 
-
                 }
-            
-        }
+
+            }
 
         }
 
         public void PrintLast()
         {
-      
-                int sumUnmarked = 0;
-                 var b = SolvedBoards.Last();
-                    foreach (Row r in b.Rows)
-                    {
-                        foreach (var number1 in r.NumbersInRow)
-                        {
-                            if (number1 != -1) sumUnmarked += number1;
-                        }
-                    }
-                    Console.WriteLine(sumUnmarked * b.NumberToComplete );
-          
+
+            int sumUnmarked = 0;
+            var b = SolvedBoards.Last();
+            foreach (Row r in b.Rows)
+            {
+                foreach (var number1 in r.NumbersInRow)
+                {
+                    if (number1 != -1) sumUnmarked += number1;
+                }
+            }
+            Console.WriteLine(sumUnmarked * b.NumberToComplete);
+
         }
 
         public void PrintFirst()
@@ -126,14 +147,24 @@ namespace AdventOfCode
         }
     }
 
-
     public class Board
     {
-        public int Id { get; set; }
-        public Row[] Rows { get; set; }
+        public int Id
+        {
+            get;
+            set;
+        }
+        public Row[] Rows
+        {
+            get;
+            set;
+        }
 
-
-        public int NumberToComplete { get; set; }
+        public int NumberToComplete
+        {
+            get;
+            set;
+        }
 
         public Board(int id, Row[] rows)
         {
@@ -143,7 +174,11 @@ namespace AdventOfCode
     }
     public class Row
     {
-        public int[] NumbersInRow { get; set; }
+        public int[] NumbersInRow
+        {
+            get;
+            set;
+        }
 
         public Row(int[] data)
         {
@@ -152,7 +187,3 @@ namespace AdventOfCode
     }
 
 }
-
-
-
-

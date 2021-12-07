@@ -26,16 +26,11 @@ namespace AdventOfCode
 
     public class LinesCalculator
     {
-        public LineSegment[] HorizontalLines { get; set; }
-        public LineSegment[] VerticalLines { get; set; }
 
-        public LineSegment[] Alllines { get; set; }
+        private readonly LineSegment[] Alllines;
 
-        public List<Vector> AllPointsCoveredByAllLinesUnique { get; set; } = new List<Vector>();
 
-        public int[,] Grid { get; set; } = new int[1000, 1000];
-
-        public Vector[] IntersectingPoints { get; set; }
+        private readonly int[,] Grid  = new int[1000, 1000];
 
         public LinesCalculator(string[] data, bool diagonal)
         {
@@ -46,13 +41,12 @@ namespace AdventOfCode
                 for (int i = 0; i < data.Length; i++)
                 {
                     var points = data[i].Split(new String[] { " -> " }, StringSplitOptions.RemoveEmptyEntries);
-                    var firstXCo = Convert.ToInt32(points[0].Split(',')[0]);
-                    var firstYCo = Convert.ToInt32(points[0].Split(',')[1]);
 
-                    var secondXCo = Convert.ToInt32(points[1].Split(',')[0]);
-                    var secondYCo = Convert.ToInt32(points[1].Split(',')[1]);
-
-                    Lines.Add(new LineSegment { First = new Vector(firstXCo, firstYCo), Second = new Vector(secondXCo, secondYCo) });
+                    Lines.Add(
+                        new LineSegment {
+                            First = new Vector(Convert.ToInt32(points[0].Split(',')[0]), Convert.ToInt32(points[0].Split(',')[1])),
+                            Second = new Vector(Convert.ToInt32(points[1].Split(',')[0]), Convert.ToInt32(points[1].Split(',')[1]))
+                        });
 
                 }
 
@@ -64,13 +58,14 @@ namespace AdventOfCode
                     for (int i = 0; i < data.Length; i++)
                     {
                         var points = data[i].Split(new String[] { " -> " }, StringSplitOptions.RemoveEmptyEntries);
-                        var firstXCo = Convert.ToInt32(points[0].Split(',')[0]);
-                        var firstYCo = Convert.ToInt32(points[0].Split(',')[1]);
 
-                        var secondXCo = Convert.ToInt32(points[1].Split(',')[0]);
-                        var secondYCo = Convert.ToInt32(points[1].Split(',')[1]);
-
-                        if (firstXCo == secondXCo || firstYCo == secondYCo) Lines.Add(new LineSegment { First = new Vector(firstXCo, firstYCo), Second = new Vector(secondXCo, secondYCo) });
+                        if (Convert.ToInt32(points[0].Split(',')[0]) == Convert.ToInt32(points[1].Split(',')[0]) || Convert.ToInt32(points[0].Split(',')[1]) == Convert.ToInt32(points[1].Split(',')[1]))
+                                Lines.Add(
+                                    new LineSegment
+                                    {
+                                        First = new Vector(Convert.ToInt32(points[0].Split(',')[0]), Convert.ToInt32(points[0].Split(',')[1])),
+                                        Second = new Vector(Convert.ToInt32(points[1].Split(',')[0]), Convert.ToInt32(points[1].Split(',')[1]))
+                                    });
 
                     }
             Alllines = Lines.ToArray();
@@ -106,45 +101,28 @@ namespace AdventOfCode
             {
                 if (vertical)
                 {
-                    if (lineSegment.First.Y > lineSegment.Second.Y)
-                    {
-                        for (int i = Convert.ToInt32(lineSegment.Second.Y); i <= lineSegment.First.Y; i++)
-                        {
-                            var v = new Vector(lineSegment.First.X, i);
-                            Grid[Convert.ToInt32(v.X), Convert.ToInt32(v.Y)]++;
+                    int length = Math.Abs(Convert.ToInt32(lineSegment.First.Y) - Convert.ToInt32(lineSegment.Second.Y)) + 1;
+                    int yDirection = lineSegment.First.Y < lineSegment.Second.Y ? 1 : -1;
 
-                        }
-                    }
-                    else
-                    {
-                        for (int i = Convert.ToInt32(lineSegment.First.Y); i <= lineSegment.Second.Y; i++)
-                        {
-                            var v = new Vector(lineSegment.First.X, i);
-                            Grid[Convert.ToInt32(v.X), Convert.ToInt32(v.Y)]++;
 
-                        }
+                    for (int i = 0; i < length; i++)
+                    {
+                        var v = new Vector(lineSegment.First.X, lineSegment.First.Y + i * yDirection);
+                        Grid[Convert.ToInt32(v.X), Convert.ToInt32(v.Y)]++;
+
                     }
+
                 }
                 if (horizontal)
                 {
-                    if (lineSegment.First.X > lineSegment.Second.X)
+                    int length = Math.Abs(Convert.ToInt32(lineSegment.First.X) - Convert.ToInt32(lineSegment.Second.X)) + 1;
+                    int xDirection = lineSegment.First.X < lineSegment.Second.X ? 1 : -1;
+
+                    for (int i = 0; i < length; i++)
                     {
-                        for (int i = Convert.ToInt32(lineSegment.Second.X); i <= lineSegment.First.X; i++)
-                        {
+                        var v = new Vector(lineSegment.First.X + i * xDirection, lineSegment.First.Y);
+                        Grid[Convert.ToInt32(v.X), Convert.ToInt32(v.Y)]++;
 
-                            var v = new Vector(i, lineSegment.First.Y);
-                            Grid[Convert.ToInt32(v.X), Convert.ToInt32(v.Y)]++;
-
-                        }
-                    }
-                    else
-                    {
-                        for (int i = Convert.ToInt32(lineSegment.First.X); i <= lineSegment.Second.X; i++)
-                        {
-                            var v = new Vector(i, lineSegment.Second.Y);
-                            Grid[Convert.ToInt32(v.X), Convert.ToInt32(v.Y)]++;
-
-                        }
                     }
                 }
             }

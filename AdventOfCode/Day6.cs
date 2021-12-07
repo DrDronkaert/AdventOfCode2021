@@ -11,12 +11,9 @@ namespace AdventOfCode
         public static void AdventOfCode61()
         {
             var data = ReadFileLogic.CreateArrayFromInputFileName("input6");
-            var school = new School(data[0]);
-            for (int i = 0; i < 80; i++)
-            {
-                school.ADayPasses();
-            }
-            Console.WriteLine(school.SchoolOfLanternFish.Count);
+            var fishTimers = Array.ConvertAll(data[0].Split(','), int.Parse);
+            CalcFishies(80, fishTimers);
+
 
 
         }
@@ -24,18 +21,24 @@ namespace AdventOfCode
         {
             var data = ReadFileLogic.CreateArrayFromInputFileName("input6");
             var fishTimers = Array.ConvertAll(data[0].Split(','), int.Parse);
+            CalcFishies(256, fishTimers);
+        }
+
+        private static void CalcFishies(int days, int[] data)
+        {
             IDictionary<int, ulong> numberOfFishesForEachTimer = new Dictionary<int, ulong>();
+
             for (int x = 0; x <= 8; x++)
             {
                 numberOfFishesForEachTimer[x] = 0;
             }
 
-            foreach (int i in fishTimers)
+            foreach (int i in data)
             {
                 numberOfFishesForEachTimer[i]++;
             }
 
-            for (int i = 0; i < 256; i++)
+            for (int i = 0; i < days; i++)
             {
                 ulong newFishesToAddAtTheEndOfTheDay = 0;
                 if (numberOfFishesForEachTimer[0] != 0)
@@ -64,59 +67,10 @@ namespace AdventOfCode
             }
             Console.WriteLine(totalFishes);
         }
-    }
-    public class LanternFish
-    {
-        public int Timer { get; set; }
-
-        public LanternFish(int timer)
-        {
-            this.Timer = timer;
-
-        }
 
 
     }
-    public class School
-    {
-        public List<LanternFish> SchoolOfLanternFish { get; set; }
-        public void SpawnNew()
-        {
-            SchoolOfLanternFish.Add(new LanternFish(8));
 
-        }
 
-        internal void ADayPasses()
-        {
-            int newFish = 0;
-            for (int i = 0; i < SchoolOfLanternFish.Count(); i++)
-            {
 
-                if (SchoolOfLanternFish[i].Timer > 0)
-                {
-                    SchoolOfLanternFish[i].Timer--;
-                }
-                else
-                {
-                    SchoolOfLanternFish[i].Timer = 6;
-                    newFish++;
-                }
-            }
-            for (int x = 0; x < newFish; x++)
-            {
-                SpawnNew();
-            }
-
-        }
-
-        public School(string data)
-        {
-            SchoolOfLanternFish = new List<LanternFish>();
-            var fishTimers = Array.ConvertAll(data.Split(','), int.Parse);
-            for (int i = 0; i < fishTimers.Length; i++)
-            {
-                SchoolOfLanternFish.Add(new LanternFish(fishTimers[i]));
-            }
-        }
-    }
 }
